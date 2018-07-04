@@ -10,19 +10,25 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TurnBasedGameDemo.ViewModels;
 
 namespace TurnBasedGameDemo
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для SettingsWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class GameFieldSettingsWindow : Window
     {
-        public MainWindow()
+        public GameFieldSettingsWindow()
         {
             InitializeComponent();
+            DataContext = new GameFieldSettingsViewModel();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }
