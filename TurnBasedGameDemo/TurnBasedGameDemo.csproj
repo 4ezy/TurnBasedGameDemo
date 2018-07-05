@@ -55,9 +55,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GameField.cs" />
+    <Compile Include="GameFieldCell.xaml.cs">
+      <DependentUpon>GameFieldCell.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IntToStringValueConverter.cs" />
+    <Compile Include="UnitType.cs" />
+    <Compile Include="ViewModels\AddUnitWindowViewModel.cs" />
     <Compile Include="ViewModels\GameFieldSettingsWindowViewModel.cs" />
     <Compile Include="ViewModels\MainWidnowViewModel.cs" />
+    <Compile Include="Views\AddUnitWindow.xaml.cs">
+      <DependentUpon>AddUnitWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GameFieldSettingsWindow.xaml.cs">
       <DependentUpon>GameFieldSettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -68,6 +76,14 @@
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModels\StartWindowViewModel.cs" />
     <Compile Include="UnitStack.cs" />
+    <Page Include="GameFieldCell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddUnitWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -119,6 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\swordsman.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,27 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TurnBasedGameDemo"
         mc:Ignorable="d"
-        Title="TurnBasedGame"
+        Title="Main window"
         Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <Style TargetType="Rectangle">
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Fill" Value="LightBlue"/>
-            <Setter Property="StrokeThickness" Value="1"/>
-            <Setter Property="Stroke" Value="CornflowerBlue"/>
+        <Style TargetType="RadioButton">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="GroupName" Value="players"/>
         </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
-            <MenuItem Header="Настройки" Command="{Binding OpenGameFieldSettingsCommand}"/>
+            <MenuItem Header="Field size" Command="{Binding OpenGameFieldSettingsCommand}"/>
         </Menu>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ContentPresenter Content="{Binding GameField}"/>
         </ScrollViewer>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Height="40">
+            <Button Content="Start game" Margin="5"/>
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            <RadioButton Content="Player1" IsChecked="True"/>
+            <RadioButton Content="Player2"/>
+        </StackPanel>
     </Grid>
 </Window>

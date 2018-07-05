@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TurnBasedGameDemo"
         mc:Ignorable="d"
-        Title="Start window - TurnBasedGameDemo"
+        Title="Start window"
         Height="300" Width="500" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="Button">
