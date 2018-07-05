@@ -1,4 +1,4 @@
-﻿<Window x:Class="TurnBasedGameDemo.GameFieldSettingsWindow"
+﻿<Window x:Class="TurnBasedGameDemo.Views.GameFieldSettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -39,6 +39,6 @@
         <TextBox Grid.Row="1" Grid.Column="2"
                      Text="{Binding GameFieldHeight, Converter={StaticResource IntToStringValueConverter}}"/>
         <Button Grid.Row="2" Grid.Column="2" 
-                Content="Подтвердить" Click="Button_Click"/>
+                Content="OK" Click="Button_Click"/>
     </Grid>
 </Window>

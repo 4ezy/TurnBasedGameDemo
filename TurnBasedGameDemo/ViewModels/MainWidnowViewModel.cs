@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
-using TurnBasedGameDemo.ViewModels;
+using TurnBasedGameDemo.Views;
 
-namespace TurnBasedGameDemo
+namespace TurnBasedGameDemo.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {

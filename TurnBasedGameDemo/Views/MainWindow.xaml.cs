@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TurnBasedGameDemo.ViewModels;
 
-namespace TurnBasedGameDemo
+namespace TurnBasedGameDemo.Views
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml

@@ -1,4 +1,4 @@
-﻿<Window x:Class="TurnBasedGameDemo.StartWindow"
+﻿<Window x:Class="TurnBasedGameDemo.Views.StartWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -17,9 +17,9 @@
     </Window.Resources>
     <Grid>
         <StackPanel VerticalAlignment="Center">
-            <Button x:Name="newGameButton" Content="Новая игра" Command="{Binding StartNewGameCommand}" Click="Button_Click"/>
-            <Button x:Name="loadGameButton" Content="Загрузить игру" Command="{Binding LoadGameCommand}" Click="Button_Click"/>
-            <Button x:Name="exitButton" Content="Выход" Command="{Binding ExitGameCommand}" Click="Button_Click"/>
+            <Button x:Name="newGameButton" Content="New game" Command="{Binding StartNewGameCommand}" Click="Button_Click"/>
+            <Button x:Name="loadGameButton" Content="Load game" Command="{Binding LoadGameCommand}" Click="Button_Click"/>
+            <Button x:Name="exitButton" Content="Exit" Command="{Binding ExitGameCommand}" Click="Button_Click"/>
         </StackPanel>
     </Grid>
 </Window>

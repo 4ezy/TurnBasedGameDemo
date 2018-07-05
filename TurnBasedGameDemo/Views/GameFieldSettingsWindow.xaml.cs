@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TurnBasedGameDemo.ViewModels;
 
-namespace TurnBasedGameDemo
+namespace TurnBasedGameDemo.Views
 {
     /// <summary>
     /// Логика взаимодействия для SettingsWindow.xaml
