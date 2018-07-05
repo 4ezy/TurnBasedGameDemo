@@ -54,9 +54,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GameField.cs" />
     <Compile Include="IntToStringValueConverter.cs" />
     <Compile Include="ViewModels\GameFieldSettingsWindowViewModel.cs" />
-    <Compile Include="ViewModels\GameWidnowViewModel.cs" />
+    <Compile Include="ViewModels\MainWidnowViewModel.cs" />
     <Compile Include="Views\GameFieldSettingsWindow.xaml.cs">
       <DependentUpon>GameFieldSettingsWindow.xaml</DependentUpon>
     </Compile>

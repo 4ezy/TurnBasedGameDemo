@@ -25,9 +25,7 @@
             <MenuItem Header="Настройки" Command="{Binding OpenGameFieldSettingsCommand}"/>
         </Menu>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <Canvas>
-                <ContentPresenter Content="{Binding Canvas}"/>
-            </Canvas>
+            <ContentPresenter Content="{Binding GameField}"/>
         </ScrollViewer>
     </Grid>
 </Window>

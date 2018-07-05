@@ -18,8 +18,16 @@ namespace TurnBasedGameDemo
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int.TryParse((string)value, out int result);
-            return result;
+            bool convRes = int.TryParse((string)value, out int result);
+
+            if (!convRes)
+                return 0;
+            else if (result < 0)
+                return 0;
+            else if (result > 20)
+                return 20;
+            else
+                return result;
         }
     }
 }

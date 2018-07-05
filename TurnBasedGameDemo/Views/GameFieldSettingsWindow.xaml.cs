@@ -30,5 +30,11 @@ namespace TurnBasedGameDemo
         {
             Close();
         }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var tb = sender as TextBox;
+            tb.Text = "";
+        }
     }
 }

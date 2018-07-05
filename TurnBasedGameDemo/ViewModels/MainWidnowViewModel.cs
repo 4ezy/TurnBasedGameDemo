@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,12 +12,23 @@ using TurnBasedGameDemo.ViewModels;
 
 namespace TurnBasedGameDemo
 {
-    public class GameWidnowViewModel
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
-        public Canvas Canvas { get; set; }
+        private GameField _gameField;
+
+        public GameField GameField
+        {
+            get { return _gameField; }
+            set
+            {
+                _gameField = value;
+                OnPropertyChanged("GameField");
+            }
+        }
+
         public RelayCommand OpenGameFieldSettingsCommand { get; set; }
 
-        public GameWidnowViewModel()
+        public MainWindowViewModel()
         {
             StartWindow startWindow = new StartWindow();
 
@@ -41,20 +54,30 @@ namespace TurnBasedGameDemo
                     break;
             }
 
+            GetGameFieldSettingsWindow();
             OpenGameFieldSettingsCommand = new RelayCommand();
             OpenGameFieldSettingsCommand.ExecutedCommand += (() =>
             {
-                OpenGameAreaSettingWindow();
+                GetGameFieldSettingsWindow();
             });
         }
 
-        private void OpenGameAreaSettingWindow()
+        private void GetGameFieldSettingsWindow()
         {
             GameFieldSettingsWindow gameFieldSettingsWindow =
                 new GameFieldSettingsWindow();
             gameFieldSettingsWindow.ShowDialog();
             GameFieldSettingsViewModel gameFieldSettingsViewModel =
                 gameFieldSettingsWindow.DataContext as GameFieldSettingsViewModel;
+            GameField = new GameField(
+                gameFieldSettingsViewModel.GameFieldWidth,
+                gameFieldSettingsViewModel.GameFieldHeight);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

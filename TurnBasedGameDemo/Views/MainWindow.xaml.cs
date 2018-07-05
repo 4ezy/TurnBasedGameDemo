@@ -23,7 +23,7 @@ namespace TurnBasedGameDemo
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new GameWidnowViewModel();
+            DataContext = new MainWindowViewModel();
         }
     }
 }
