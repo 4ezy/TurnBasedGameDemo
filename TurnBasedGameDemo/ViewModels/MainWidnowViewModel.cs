@@ -12,25 +12,15 @@ using TurnBasedGameDemo.Views;
 
 namespace TurnBasedGameDemo.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel
     {
-        private GameField _gameField;
-
-        public GameField GameField
-        {
-            get { return _gameField; }
-            set
-            {
-                _gameField = value;
-                OnPropertyChanged("GameField");
-            }
-        }
+        public Game Game { get; set; }
 
         public RelayCommand OpenGameFieldSettingsCommand { get; set; }
 
         public MainWindowViewModel()
         {
-            StartWindow startWindow = new StartWindow();
+            var startWindow = new StartWindow();
 
             if (startWindow.ShowDialog() == false)
             {
@@ -44,6 +34,7 @@ namespace TurnBasedGameDemo.ViewModels
             switch (startWindowAction)
             {
                 case StartWindowAction.StartGame:
+                    Game = new Game();
                     break;
                 case StartWindowAction.LoadGame:
                     break;
@@ -64,20 +55,14 @@ namespace TurnBasedGameDemo.ViewModels
 
         private void GetGameFieldSettingsWindow()
         {
-            GameFieldSettingsWindow gameFieldSettingsWindow =
+            var gameFieldSettingsWindow =
                 new GameFieldSettingsWindow();
             gameFieldSettingsWindow.ShowDialog();
-            GameFieldSettingsViewModel gameFieldSettingsViewModel =
+            var gameFieldSettingsViewModel =
                 gameFieldSettingsWindow.DataContext as GameFieldSettingsViewModel;
-            GameField = new GameField(
+            Game.GameField = new GameField(
                 gameFieldSettingsViewModel.GameFieldWidth,
                 gameFieldSettingsViewModel.GameFieldHeight);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

@@ -48,15 +48,13 @@ namespace TurnBasedGameDemo
 
                 menuItemAdd.Click += ((s, e) =>
                 {
-                    AddUnitWindow addUnitWindow = new AddUnitWindow();
+                    var addUnitWindow = new AddUnitWindow();
 
                     if (addUnitWindow.ShowDialog() == false)
                         return;
 
-                    AddUnitWindowViewModel addUnitWindowViewModel = 
+                    var addUnitWindowViewModel = 
                         addUnitWindow.DataContext as AddUnitWindowViewModel;
-
-
                 });
 
                 int vertOffset, horzOffset = 0;

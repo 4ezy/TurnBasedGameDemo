@@ -28,6 +28,7 @@ namespace TurnBasedGameDemo.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            DialogResult = true;
             Close();
         }
 

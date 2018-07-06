@@ -25,7 +25,7 @@
             <MenuItem Header="Field size" Command="{Binding OpenGameFieldSettingsCommand}"/>
         </Menu>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ContentPresenter Content="{Binding GameField}"/>
+            <ContentPresenter Content="{Binding Game.GameField}"/>
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Height="40">
             <Button Content="Start game" Margin="5"/>

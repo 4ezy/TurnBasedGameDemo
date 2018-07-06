@@ -59,8 +59,10 @@
       <DependentUpon>GameFieldCell.xaml</DependentUpon>
     </Compile>
     <Compile Include="IntToStringValueConverter.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="UnitType.cs" />
     <Compile Include="ViewModels\AddUnitWindowViewModel.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="ViewModels\GameFieldSettingsWindowViewModel.cs" />
     <Compile Include="ViewModels\MainWidnowViewModel.cs" />
     <Compile Include="Views\AddUnitWindow.xaml.cs">
