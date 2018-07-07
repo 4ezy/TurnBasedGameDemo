@@ -30,7 +30,7 @@
         <StackPanel Grid.Row="3" Orientation="Horizontal" Height="40">
             <Button Content="Start game" Margin="5"/>
             <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-            <RadioButton Content="Player1" IsChecked="True"/>
+            <RadioButton Content="Player1" IsChecked="{Binding Game.IsPlayer1Selected}"/>
             <RadioButton Content="Player2"/>
         </StackPanel>
     </Grid>

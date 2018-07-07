@@ -21,9 +21,9 @@ namespace TurnBasedGameDemo
             bool convRes = int.TryParse((string)value, out int result);
 
             if (!convRes)
-                return 0;
-            else if (result < 0)
-                return 0;
+                return 1;
+            else if (result < 1)
+                return 1;
             else if (result > 20)
                 return 20;
             else

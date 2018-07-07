@@ -21,7 +21,7 @@ namespace TurnBasedGameDemo.ViewModels
 
             StartNewGameCommand.ExecutedCommand += (() => 
             {
-                StartWindowAction = StartWindowAction.StartGame;
+                StartWindowAction = StartWindowAction.NewGame;
             });
 
             LoadGameCommand.ExecutedCommand += (() =>

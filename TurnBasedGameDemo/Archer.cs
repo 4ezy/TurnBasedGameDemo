@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TurnBasedGameDemo
 {
-    public class Archer : Character
+    public class Archer : Unit
     {
         public Archer()
             : base(15, 2, 4, 5, 3) { }

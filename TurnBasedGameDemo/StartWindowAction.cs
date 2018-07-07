@@ -9,7 +9,7 @@ namespace TurnBasedGameDemo
     public enum StartWindowAction
     {
         ExitGame,
-        StartGame,
+        NewGame,
         LoadGame,
     }
 }

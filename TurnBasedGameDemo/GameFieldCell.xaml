@@ -8,6 +8,6 @@
              d:DesignHeight="50" d:DesignWidth="50">
     <Grid>
         <Rectangle x:Name="rect" Fill="LightBlue" Stroke="CornflowerBlue"/>
-        <Image x:Name="img"/>
+        <Image x:FieldModifier="private" x:Name="img"/>
     </Grid>
 </UserControl>

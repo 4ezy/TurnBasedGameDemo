@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -15,48 +16,28 @@ namespace TurnBasedGameDemo
 {
     public class GameField : Canvas
     {
-        public int HorzCellsCount { get; set; }
-        public int VertCellsCount { get; set; }
-        public List<UnitStack> PlayerOneUnits { get; set; }
-        public List<UnitStack> PlayerTwoUnits { get; set; }
+        public int HorzCellsCount { get; private set; }
+        public int VertCellsCount { get; private set; }
+        public Player SelectedPlayer { get; set; }
+        public GameFieldCell SelectedCell { get; set; }
+
         private readonly int _rectSize = 50;
 
-        public GameField() { }
-
-        public GameField(int horzCellsCount, int vertCellsCount)
+        public GameField(int horzCellsCount, int vertCellsCount, Player selectedPlayer)
         {
             HorzCellsCount = horzCellsCount;
             VertCellsCount = vertCellsCount;
             Width = _rectSize * horzCellsCount;
             Height = _rectSize * vertCellsCount;
-            PlayerOneUnits = new List<UnitStack>();
-            PlayerTwoUnits = new List<UnitStack>();
+            SelectedPlayer = selectedPlayer;
             GenerateField();
+            CreateContextMenuForGameField();
         }
 
         public void GenerateField()
         {
             if (HorzCellsCount > 0 && VertCellsCount > 0)
             {
-                var contextMenu = new ContextMenu();
-                var menuItemAdd = new MenuItem();
-                var menuItemRemove = new MenuItem();
-                contextMenu.Items.Add(menuItemAdd);
-                contextMenu.Items.Add(menuItemRemove);
-                menuItemAdd.Header = "Add";
-                menuItemRemove.Header = "Remove";
-
-                menuItemAdd.Click += ((s, e) =>
-                {
-                    var addUnitWindow = new AddUnitWindow();
-
-                    if (addUnitWindow.ShowDialog() == false)
-                        return;
-
-                    var addUnitWindowViewModel = 
-                        addUnitWindow.DataContext as AddUnitWindowViewModel;
-                });
-
                 int vertOffset, horzOffset = 0;
 
                 for (int i = 0; i < HorzCellsCount; i++)
@@ -71,24 +52,8 @@ namespace TurnBasedGameDemo
                             Height = _rectSize
                         };
 
-                        //BitmapImage bitmapImage = new BitmapImage(new Uri("pack://application:,,,/Resources/swordsman.png"));
-                        //cell.img.Source = bitmapImage;
+                        newCell.PreviewMouseRightButtonUp += SelectCell;
 
-                        newCell.PreviewMouseLeftButtonUp += ((s, e) =>
-                        {
-                            var curField = s as GameFieldCell;
-                            bool cellMode = !curField.IsSelected;
-
-                            foreach (var c in Children)
-                            {
-                                var cell = c as GameFieldCell;
-                                cell.IsSelected = false;
-                            }
-
-                            curField.IsSelected = cellMode;
-                        });
-
-                        newCell.ContextMenu = contextMenu;
                         Children.Add(newCell);
                         SetTop(newCell, vertOffset);
                         SetLeft(newCell, horzOffset);
@@ -100,9 +65,89 @@ namespace TurnBasedGameDemo
             }
         }
 
-        public void AddUnitsStack(int unitsCount, UnitType unitType)
+        private void SelectCell(object sender, MouseButtonEventArgs e)
         {
+            var selCell = sender as GameFieldCell;
 
+            if (!selCell.IsSelected)
+            {
+                foreach (var c in Children)
+                {
+                    var cell = c as GameFieldCell;
+                    cell.IsSelected = false;
+                }
+
+                selCell.IsSelected = true;
+                SelectedCell = selCell;
+            }
+        }
+
+        public void CreateContextMenuForGameField()
+        {
+            var contextMenu = new ContextMenu();
+            var menuItemAdd = new MenuItem();
+            var menuItemRemove = new MenuItem();
+            contextMenu.Items.Add(menuItemAdd);
+            contextMenu.Items.Add(menuItemRemove);
+            menuItemAdd.Header = "Add";
+            menuItemRemove.Header = "Remove";
+
+            menuItemAdd.Click += AddUnit;
+            menuItemRemove.Click += RemoveUnit;
+
+            ContextMenu = contextMenu;
+        }
+
+        private void RemoveUnit(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void AddUnit(object sender, RoutedEventArgs e)
+        {
+            if (SelectedCell.UnitStack != null)
+            {
+                if (SelectedPlayer.UnitStacks.Contains(SelectedCell.UnitStack))
+                {
+                    ShowAddUnitWindow();
+                }
+            }
+            else
+            {
+                ShowAddUnitWindow();
+            }
+        }
+
+        private void ShowAddUnitWindow()
+        {
+            var addUnitWindow = new AddUnitWindow();
+
+            if (addUnitWindow.ShowDialog() == false)
+                return;
+
+            var addUnitWindowViewModel =
+                addUnitWindow.DataContext as AddUnitWindowViewModel;
+
+            UnitType unitType = addUnitWindowViewModel.SelectedUnitType;
+            int numberOfUnits = addUnitWindowViewModel.NumberOfUnits;
+
+            switch (unitType)
+            {
+                case UnitType.Swordsman:
+                    SelectedCell.UnitImage = SelectedPlayer.SwordsmanImage;
+                    break;
+                case UnitType.Archer:
+                    SelectedCell.UnitImage = SelectedPlayer.ArcherImage;
+                    break;
+                case UnitType.Peasant:
+                    SelectedCell.UnitImage = SelectedPlayer.PeasantImage;
+                    break;
+                default:
+                    break;
+            }
+
+            SelectedPlayer.UnitStacks.Add(new UnitStack(unitType, numberOfUnits));
+            SelectedCell.UnitStack = SelectedPlayer.UnitStacks.Last();
         }
     }
 }

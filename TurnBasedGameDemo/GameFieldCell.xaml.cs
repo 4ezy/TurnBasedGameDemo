@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +23,7 @@ namespace TurnBasedGameDemo
     public partial class GameFieldCell : UserControl
     {
         private bool _isSelected;
+        private BitmapImage _unitImage;
 
         public bool IsSelected
         {
@@ -37,6 +40,16 @@ namespace TurnBasedGameDemo
         }
         public Color SelectedColor { get; set; }
         public Color DefaultColor { get; set; }
+
+        public UnitStack UnitStack { get; set; }
+        public BitmapImage UnitImage {
+            get { return _unitImage; }
+            set
+            {
+                _unitImage = value;
+                img.Source = _unitImage;
+            }
+        }
 
         public GameFieldCell()
         {

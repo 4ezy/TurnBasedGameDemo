@@ -15,6 +15,7 @@ namespace TurnBasedGameDemo.ViewModels
         public AddUnitWindowViewModel()
         {
             UnitTypes = Enum.GetNames(typeof(UnitType)).ToList();
+            NumberOfUnits = 1;
         }
     }
 }

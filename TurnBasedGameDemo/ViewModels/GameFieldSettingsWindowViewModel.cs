@@ -32,6 +32,12 @@ namespace TurnBasedGameDemo.ViewModels
             }
         }
 
+        public GameFieldSettingsViewModel()
+        {
+            GameFieldWidth = 1;
+            GameFieldHeight = 1;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {

@@ -33,7 +33,7 @@ namespace TurnBasedGameDemo.ViewModels
 
             switch (startWindowAction)
             {
-                case StartWindowAction.StartGame:
+                case StartWindowAction.NewGame:
                     Game = new Game();
                     break;
                 case StartWindowAction.LoadGame:
@@ -57,12 +57,24 @@ namespace TurnBasedGameDemo.ViewModels
         {
             var gameFieldSettingsWindow =
                 new GameFieldSettingsWindow();
-            gameFieldSettingsWindow.ShowDialog();
+
+            if (gameFieldSettingsWindow.ShowDialog() == false)
+                return;
+
             var gameFieldSettingsViewModel =
                 gameFieldSettingsWindow.DataContext as GameFieldSettingsViewModel;
+
+            Player player;
+
+            if (Game.IsPlayer1Selected)
+                player = Game.Player1;
+            else
+                player = Game.Player2;
+
             Game.GameField = new GameField(
                 gameFieldSettingsViewModel.GameFieldWidth,
-                gameFieldSettingsViewModel.GameFieldHeight);
+                gameFieldSettingsViewModel.GameFieldHeight,
+                player);
         }
     }
 }
