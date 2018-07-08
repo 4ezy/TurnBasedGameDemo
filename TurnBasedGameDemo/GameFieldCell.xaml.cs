@@ -41,7 +41,47 @@ namespace TurnBasedGameDemo
         public Color SelectedColor { get; set; }
         public Color DefaultColor { get; set; }
 
-        public UnitStack UnitStack { get; set; }
+        private int _currentUnitNumber;
+        public int CurrentUnitNumber
+        {
+            get { return _currentUnitNumber; }
+            set
+            {
+                _currentUnitNumber = value;
+                pb.Value = _currentUnitNumber;
+            }
+        }
+
+        private int _maxUnitNumber;
+        public int MaxUnitNumber
+        {
+            get { return _maxUnitNumber; }
+            set
+            {
+                _maxUnitNumber = value;
+                pb.Maximum = _maxUnitNumber;
+            }
+        }
+
+        private UnitStack _unitStack;
+        public UnitStack UnitStack
+        {
+            get { return _unitStack; }
+            set
+            {
+                _unitStack = value;
+
+                if (_unitStack == null)
+                {
+                    pb.Value = 0;
+                }
+                else
+                {
+                    CurrentUnitNumber = _unitStack.UnitsCapacity * _unitStack.Units.FirstOrDefault().HitPoints;
+                    MaxUnitNumber = _unitStack.UnitsCapacity * _unitStack.Units.FirstOrDefault().HitPoints;
+                }
+            }
+        }
         public BitmapImage UnitImage {
             get { return _unitImage; }
             set
@@ -49,13 +89,21 @@ namespace TurnBasedGameDemo
                 _unitImage = value;
                 img.Source = _unitImage;
             }
-        }
+        } 
 
         public GameFieldCell()
         {
             InitializeComponent();
             SelectedColor = Colors.Aqua;
             DefaultColor = Colors.LightBlue;
+        }
+
+        public void ClearCell()
+        {
+            UnitImage = null;
+            UnitStack = null;
+            CurrentUnitNumber = 0;
+            MaxUnitNumber = 1;
         }
     }
 }

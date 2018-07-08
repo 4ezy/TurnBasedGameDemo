@@ -14,6 +14,7 @@
             <Setter Property="Margin" Value="5"/>
             <Setter Property="GroupName" Value="players"/>
         </Style>
+        <local:BoolViceVercaConverter x:Key="BoolViceVercaConverter"></local:BoolViceVercaConverter>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -22,16 +23,22 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
-            <MenuItem Header="Field size" Command="{Binding OpenGameFieldSettingsCommand}"/>
+            <MenuItem Header="Field size" Command="{Binding OpenGameFieldSettingsCommand}"
+                      IsEnabled="{Binding IsGameStarted, Converter={StaticResource BoolViceVercaConverter}}"/>
         </Menu>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ContentPresenter Content="{Binding Game.GameField}"/>
         </ScrollViewer>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Height="40">
-            <Button Content="Start game" Margin="5"/>
+        <StackPanel Grid.Row="3" Visibility="{Binding IsToolbarVisible}" Orientation="Horizontal" Height="40">
+            <Button Margin="5" Command="{Binding StartGameCommand}" Content="Start game"
+                    IsEnabled="{Binding IsGameStarted, Converter={StaticResource BoolViceVercaConverter}}"/>
             <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-            <RadioButton Content="Player1" IsChecked="{Binding Game.IsPlayer1Selected}"/>
-            <RadioButton Content="Player2"/>
+            <RadioButton Content="Player1" IsChecked="{Binding Game.IsPlayer1Selected}" 
+                         IsEnabled="{Binding IsGameStarted, Converter={StaticResource BoolViceVercaConverter}}"/>
+            <RadioButton Content="Player2" IsChecked="{Binding Game.IsPlayer1Selected, Converter={StaticResource BoolViceVercaConverter}}"
+                         IsEnabled="{Binding IsGameStarted, Converter={StaticResource BoolViceVercaConverter}}"/>
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{Binding ActionText}"/>
         </StackPanel>
     </Grid>
 </Window>

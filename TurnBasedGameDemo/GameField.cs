@@ -20,6 +20,7 @@ namespace TurnBasedGameDemo
         public int VertCellsCount { get; private set; }
         public Player SelectedPlayer { get; set; }
         public GameFieldCell SelectedCell { get; set; }
+        public GameFieldCell CellToAttack { get; set; }
 
         private readonly int _rectSize = 50;
 
@@ -52,7 +53,7 @@ namespace TurnBasedGameDemo
                             Height = _rectSize
                         };
 
-                        newCell.PreviewMouseRightButtonUp += SelectCell;
+                        newCell.PreviewMouseRightButtonUp += OnCellSelected;
 
                         Children.Add(newCell);
                         SetTop(newCell, vertOffset);
@@ -65,11 +66,27 @@ namespace TurnBasedGameDemo
             }
         }
 
-        private void SelectCell(object sender, MouseButtonEventArgs e)
+        public void OnCellSelected(object sender, MouseButtonEventArgs e)
         {
             var selCell = sender as GameFieldCell;
+            SelectCell(selCell);
+        }
 
-            if (!selCell.IsSelected)
+        public void OnCellSelectedLeftClick(object sender, MouseButtonEventArgs e)
+        {
+            var selCell = sender as GameFieldCell;
+            SelectCell(selCell);
+        }
+
+        public void OnCellForAttackSelected(object sender, MouseButtonEventArgs e)
+        {
+            var cellToAttack = sender as GameFieldCell;
+            SelectCellToAction(cellToAttack);
+        }
+
+        public void SelectCell(GameFieldCell selCell)
+        {
+            Dispatcher.Invoke(() =>
             {
                 foreach (var c in Children)
                 {
@@ -79,7 +96,24 @@ namespace TurnBasedGameDemo
 
                 selCell.IsSelected = true;
                 SelectedCell = selCell;
-            }
+            });
+        }
+
+        public void SelectCellToAction(GameFieldCell cellToAttack)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                foreach (var c in Children)
+                {
+                    var cell = c as GameFieldCell;
+
+                    if (cell != SelectedCell)
+                        cell.IsSelected = false;
+                }
+            });
+
+            cellToAttack.IsSelected = true;
+            CellToAttack = cellToAttack;
         }
 
         public void CreateContextMenuForGameField()
@@ -92,30 +126,35 @@ namespace TurnBasedGameDemo
             menuItemAdd.Header = "Add";
             menuItemRemove.Header = "Remove";
 
-            menuItemAdd.Click += AddUnit;
-            menuItemRemove.Click += RemoveUnit;
+            menuItemAdd.Click += AddUnitClick;
+            menuItemRemove.Click += RemoveUnitClick;
 
             ContextMenu = contextMenu;
         }
 
-        private void RemoveUnit(object sender, RoutedEventArgs e)
+        private void RemoveUnitClick(object sender, RoutedEventArgs e)
         {
-            
+            if (SelectedPlayer.UnitStacks.Contains(SelectedCell.UnitStack))
+            {
+                SelectedPlayer.UnitStacks.Remove(SelectedCell.UnitStack);
+                SelectedCell.UnitStack = null;
+                SelectedCell.UnitImage = null;
+            }
         }
 
-        private void AddUnit(object sender, RoutedEventArgs e)
+        private void AddUnitClick(object sender, RoutedEventArgs e)
         {
             if (SelectedCell.UnitStack != null)
             {
                 if (SelectedPlayer.UnitStacks.Contains(SelectedCell.UnitStack))
                 {
+                    var remUnit = SelectedCell.UnitStack;
                     ShowAddUnitWindow();
+                    SelectedPlayer.UnitStacks.Remove(remUnit);
                 }
             }
             else
-            {
                 ShowAddUnitWindow();
-            }
         }
 
         private void ShowAddUnitWindow()
@@ -146,7 +185,7 @@ namespace TurnBasedGameDemo
                     break;
             }
 
-            SelectedPlayer.UnitStacks.Add(new UnitStack(unitType, numberOfUnits));
+            SelectedPlayer.UnitStacks.Add(new UnitStack(unitType, numberOfUnits, SelectedCell));
             SelectedCell.UnitStack = SelectedPlayer.UnitStacks.Last();
         }
     }

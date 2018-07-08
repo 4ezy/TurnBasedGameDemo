@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BoolViceVercaConverter.cs" />
     <Compile Include="GameField.cs" />
     <Compile Include="GameFieldCell.xaml.cs">
       <DependentUpon>GameFieldCell.xaml</DependentUpon>
@@ -139,16 +140,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\swordsman1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\swordsman2.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\peasant2.png" />
     <Resource Include="Resources\peasant1.png" />
     <Resource Include="Resources\archer1.png" />
     <Resource Include="Resources\archer2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\swordsman1.png" />
+    <Resource Include="Resources\swordsman2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

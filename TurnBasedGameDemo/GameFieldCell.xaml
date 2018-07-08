@@ -7,7 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="50">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Rectangle x:Name="rect" Fill="LightBlue" Stroke="CornflowerBlue"/>
         <Image x:FieldModifier="private" x:Name="img"/>
+        <ProgressBar x:Name="pb" x:FieldModifier="private" Minimum="0"
+                     Grid.Row="1" Margin="1"/>
     </Grid>
 </UserControl>

@@ -9,16 +9,18 @@ namespace TurnBasedGameDemo
 {
     public abstract class Unit
     {
-        public int HitPoints { get; set; }
-        public int MinDamage { get; set; }
-        public int MaxDamage { get; set; }
-        public int Speed { get; set; }
-        public int MovementPoints { get; set; }
+        public int HitPoints { get; }
+        public int CurrentHitPoints { get; set; }
+        public int MinDamage { get; }
+        public int MaxDamage { get; }
+        public int Speed { get; }
+        public int MovementPoints { get; }
 
         protected Unit(int hitPoints, int minDamage,
             int maxDamage, int speed, int movementPoints)
         {
             HitPoints = hitPoints;
+            CurrentHitPoints = hitPoints;
             MinDamage = minDamage;
             MaxDamage = maxDamage;
             Speed = speed;
