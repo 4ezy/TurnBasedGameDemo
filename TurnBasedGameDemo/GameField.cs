@@ -16,36 +16,37 @@ namespace TurnBasedGameDemo
 {
     public class GameField : Canvas
     {
-        public int HorzCellsCount { get; private set; }
-        public int VertCellsCount { get; private set; }
         public Player SelectedPlayer { get; set; }
+        public List<GameFieldCell> GameFieldCells { get; set; }
+
         public GameFieldCell SelectedCell { get; set; }
         public GameFieldCell CellToAttack { get; set; }
 
         private readonly int _rectSize = 50;
 
+        public GameField() { }
+
         public GameField(int horzCellsCount, int vertCellsCount, Player selectedPlayer)
         {
-            HorzCellsCount = horzCellsCount;
-            VertCellsCount = vertCellsCount;
             Width = _rectSize * horzCellsCount;
             Height = _rectSize * vertCellsCount;
             SelectedPlayer = selectedPlayer;
-            GenerateField();
+            GameFieldCells = new List<GameFieldCell>();
+            GenerateField(horzCellsCount, vertCellsCount);
             CreateContextMenuForGameField();
         }
 
-        public void GenerateField()
+        public void GenerateField(int horzCellsCount, int vertCellsCount)
         {
-            if (HorzCellsCount > 0 && VertCellsCount > 0)
+            if (horzCellsCount > 0 && vertCellsCount > 0)
             {
                 int vertOffset, horzOffset = 0;
 
-                for (int i = 0; i < HorzCellsCount; i++)
+                for (int i = 0; i < horzCellsCount; i++)
                 {
                     vertOffset = 0;
 
-                    for (int j = 0; j < VertCellsCount; j++)
+                    for (int j = 0; j < vertCellsCount; j++)
                     {
                         var newCell = new GameFieldCell()
                         {
@@ -55,6 +56,7 @@ namespace TurnBasedGameDemo
 
                         newCell.PreviewMouseRightButtonUp += OnCellSelected;
 
+                        GameFieldCells.Add(newCell);
                         Children.Add(newCell);
                         SetTop(newCell, vertOffset);
                         SetLeft(newCell, horzOffset);

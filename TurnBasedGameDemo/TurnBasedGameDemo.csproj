@@ -59,9 +59,14 @@
     <Compile Include="GameFieldCell.xaml.cs">
       <DependentUpon>GameFieldCell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GameFieldCellSerializableData.cs" />
+    <Compile Include="GameFieldSerializableData.cs" />
     <Compile Include="IntToStringValueConverter.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="GameSerializableData.cs" />
+    <Compile Include="PlayerSerializableData.cs" />
     <Compile Include="SimpleUnitFactory.cs" />
+    <Compile Include="UnitStackSerializableData.cs" />
     <Compile Include="UnitType.cs" />
     <Compile Include="ViewModels\AddUnitWindowViewModel.cs" />
     <Compile Include="Game.cs" />

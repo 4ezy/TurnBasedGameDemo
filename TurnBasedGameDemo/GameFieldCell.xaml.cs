@@ -38,6 +38,7 @@ namespace TurnBasedGameDemo
                     rect.Fill = new SolidColorBrush(DefaultColor);
             }
         }
+
         public Color SelectedColor { get; set; }
         public Color DefaultColor { get; set; }
 

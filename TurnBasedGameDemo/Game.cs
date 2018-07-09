@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Xml.Serialization;
 using TurnBasedGameDemo.ViewModels;
 using TurnBasedGameDemo.Views;
 
 namespace TurnBasedGameDemo
 {
-    [Serializable]
     public class Game : INotifyPropertyChanged
     {
         private GameField _gameField;
@@ -134,7 +135,9 @@ namespace TurnBasedGameDemo
 
         public void WaitClick(object sender, System.Windows.RoutedEventArgs e)
         {
+            string actionText = "Unitstack wait...";
             ActionCompleted = true;
+            OnActionCompleted?.Invoke(actionText);
         }
 
         public void AttackClick(object sender, System.Windows.RoutedEventArgs e)
@@ -142,6 +145,7 @@ namespace TurnBasedGameDemo
             string actionText = GameField.SelectedCell.UnitStack.Attack(GameField.CellToAttack.UnitStack);
 
             if (GameField.CellToAttack.UnitStack != null ||
+                GameField.CellToAttack.UnitStack != GameField.SelectedCell.UnitStack ||
                 GameField.CellToAttack.UnitStack.Units.Count <
                 GameField.CellToAttack.MaxUnitNumber)
             {
@@ -154,7 +158,7 @@ namespace TurnBasedGameDemo
                 }
                 else if (GameField.CellToAttack.UnitStack.Units.Count == 1)
                 {
-                    GameField.CellToAttack.CurrentUnitNumber = 
+                    GameField.CellToAttack.CurrentUnitNumber =
                         GameField.CellToAttack.UnitStack.Units.Peek().CurrentHitPoints;
                 }
                 else
@@ -171,10 +175,9 @@ namespace TurnBasedGameDemo
                         Player1.UnitStacks.Remove(GameField.CellToAttack.UnitStack);
                         GameEnded = Player1.UnitStacks.Count > 0 ? false : true;
                     }
-                        
+
                     GameField.CellToAttack.ClearCell();
                 }
-
             }
 
             ActionCompleted = true;

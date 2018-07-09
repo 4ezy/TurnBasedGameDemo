@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TurnBasedGameDemo
 {
+    [Serializable]
     public class Archer : Unit
     {
         public Archer()

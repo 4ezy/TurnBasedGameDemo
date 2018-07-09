@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace TurnBasedGameDemo
 {
+    [Serializable]
     public class Swordsman : Unit
     {
         public Swordsman()

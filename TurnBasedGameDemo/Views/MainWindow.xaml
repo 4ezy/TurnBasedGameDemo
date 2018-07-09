@@ -25,6 +25,9 @@
         <Menu Grid.Row="0">
             <MenuItem Header="Field size" Command="{Binding OpenGameFieldSettingsCommand}"
                       IsEnabled="{Binding IsGameStarted, Converter={StaticResource BoolViceVercaConverter}}"/>
+            <MenuItem Header="Save game" Command="{Binding SaveGameCommand}"/>
+            <MenuItem Header="Load game" Command="{Binding LoadGameCommand}"
+                      IsEnabled="{Binding IsGameStarted, Converter={StaticResource BoolViceVercaConverter}}"/>
         </Menu>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ContentPresenter Content="{Binding Game.GameField}"/>

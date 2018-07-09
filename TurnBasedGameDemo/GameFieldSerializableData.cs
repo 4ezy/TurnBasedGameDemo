@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 namespace TurnBasedGameDemo
 {
     [Serializable]
-    public class Peasant : Unit
+    public class GameFieldSerializableData
     {
-        public Peasant() 
-            : base(10, 1, 2, 2, 1) { }
+        public List<GameFieldCellSerializableData> GameFieldCellsSerializableData { get; set; }
     }
 }

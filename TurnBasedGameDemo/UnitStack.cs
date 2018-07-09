@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace TurnBasedGameDemo
 {
@@ -29,8 +30,10 @@ namespace TurnBasedGameDemo
         {
             if (unitStack == null)
                 return "Unitstack attacked air and deals 0 damage.";
+            else if (unitStack == this)
+                return "Unitstack don't want attack oneself, general.";
 
-            var random = new Random();
+            var random = new Random(DateTime.Today.Second);
             Unit unit = Units.FirstOrDefault();
             int attackValue = random.Next(unit.MinDamage, unit.MaxDamage) * Units.Count;
             string ret = $"Unitstack attacked and deals {attackValue} damage.";
