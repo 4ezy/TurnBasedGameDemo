@@ -20,11 +20,12 @@ namespace TurnBasedGameDemo.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        private readonly string _gameSavedDataPath = "savedata.dat";
+        private bool _isGameStarted;
+        private string _actionText;
+
         public Game Game { get; set; }
 
-        private readonly string gameSavedDataPath = "savedata.dat";
-
-        private bool _isGameStarted;
         public bool IsGameStarted
         {
             get { return _isGameStarted; }
@@ -35,7 +36,6 @@ namespace TurnBasedGameDemo.ViewModels
             }
         }
 
-        private string _actionText;
         public string ActionText
         {
             get { return _actionText; }
@@ -249,7 +249,7 @@ namespace TurnBasedGameDemo.ViewModels
             data.GameFieldSerializableData = GetGameFieldSerializableData(Game.GameField);
 
             var binaryFormatter = new BinaryFormatter();
-            using (var fs = new FileStream(gameSavedDataPath, FileMode.Create))
+            using (var fs = new FileStream(_gameSavedDataPath, FileMode.Create))
                 binaryFormatter.Serialize(fs, data);
         }
 
@@ -345,7 +345,7 @@ namespace TurnBasedGameDemo.ViewModels
 
             try
             {
-                using (FileStream fs = new FileStream(gameSavedDataPath, FileMode.Open))
+                using (FileStream fs = new FileStream(_gameSavedDataPath, FileMode.Open))
                     data = (GameSerializableData)binaryFormatter.Deserialize(fs);
             }
             catch (FileNotFoundException)

@@ -10,7 +10,6 @@ namespace TurnBasedGameDemo
     public class GameSerializableData
     {
         public bool IsPlayer1Selected { get; set; }
-
         public PlayerSerializableData Player1 { get; set; }
         public PlayerSerializableData Player2 { get; set; }
         public GameFieldSerializableData GameFieldSerializableData { get; set; }

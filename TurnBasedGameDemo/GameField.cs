@@ -20,7 +20,6 @@ namespace TurnBasedGameDemo
         public int VertCellsCount { get; }
         public Player SelectedPlayer { get; set; }
         public List<GameFieldCell> GameFieldCells { get; set; }
-
         public GameFieldCell SelectedCell { get; set; }
         public GameFieldCell CellToAttack { get; set; }
 

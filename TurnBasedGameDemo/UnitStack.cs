@@ -10,9 +10,9 @@ namespace TurnBasedGameDemo
     public class UnitStack : IComparable<UnitStack>
     {
         public int UnitsCapacity { get; }
+        public int CellIndex { get; set; }
         public Stack<Unit> Units { get; set; }
         public GameFieldCell Cell { get; set; }
-        public int CellIndex { get; set; }
         public UnitType UnitType { get; }
 
         public UnitStack(UnitType unitType, int unitsCapacity)

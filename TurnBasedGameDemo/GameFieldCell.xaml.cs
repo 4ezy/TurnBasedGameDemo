@@ -24,6 +24,7 @@ namespace TurnBasedGameDemo
     {
         private bool _isSelected;
         private BitmapImage _unitImage;
+        private int _currentUnitNumber;
 
         public bool IsSelected
         {
@@ -42,7 +43,6 @@ namespace TurnBasedGameDemo
         public Color SelectedColor { get; set; }
         public Color DefaultColor { get; set; }
 
-        private int _currentUnitNumber;
         public int CurrentUnitNumber
         {
             get { return _currentUnitNumber; }
