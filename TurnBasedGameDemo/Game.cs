@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Xml.Serialization;
-using TurnBasedGameDemo.ViewModels;
-using TurnBasedGameDemo.Views;
 
 namespace TurnBasedGameDemo
 {
@@ -30,12 +22,25 @@ namespace TurnBasedGameDemo
 
         public event Action<string> OnActionCompleted;
         public bool ActionCompleted { get; set; }
-        public bool GameEnded { get; set; }
+        public bool GameEnded
+        {
+            get { return _gameEnded; }
+            set
+            {
+                _gameEnded = value;
+
+                if (_gameEnded)
+                    EndGame();
+            }
+        }
+        public bool IsGameStopped { get; set; }
         public Player Player1 { get; set; }
         public Player Player2 { get; set; }
         public event Action OnGameEnded;
 
         private bool _isPlayer1Selected;
+        private bool _gameEnded;
+
         public bool IsPlayer1Selected
         {
             get { return _isPlayer1Selected; }
@@ -64,7 +69,7 @@ namespace TurnBasedGameDemo
             IsPlayer1Selected = true;
         }
 
-        public void PrepareRound()
+        public void PrepareGame()
         {
             foreach (var c in GameField.Children)
             {
@@ -74,6 +79,18 @@ namespace TurnBasedGameDemo
             }
 
             CreateGameContextMenu();
+        }
+
+        public void EndGame()
+        {
+            foreach (var c in GameField.Children)
+            {
+                var cell = c as GameFieldCell;
+                cell.PreviewMouseRightButtonUp -= GameField.OnCellForAttackSelected;
+                cell.PreviewMouseRightButtonUp += GameField.OnCellSelected;
+            }
+
+            GameField.CreateContextMenuForGameField();
         }
 
         public void StartRound()
@@ -115,11 +132,14 @@ namespace TurnBasedGameDemo
             if (!GameEnded)
                 StartRound();
 
-            OnGameEnded?.Invoke();
-            OnGameEnded = null;
+            if (!IsGameStopped)
+            {
+                OnGameEnded?.Invoke();
+                OnGameEnded = null;
+            }
         }
 
-        private void CreateGameContextMenu()
+        public void CreateGameContextMenu()
         {
             var contextMenu = new ContextMenu();
             var menuItemAttack = new MenuItem();
@@ -144,10 +164,9 @@ namespace TurnBasedGameDemo
         {
             string actionText = GameField.SelectedCell.UnitStack.Attack(GameField.CellToAttack.UnitStack);
 
-            if (GameField.CellToAttack.UnitStack != null ||
-                GameField.CellToAttack.UnitStack != GameField.SelectedCell.UnitStack ||
-                GameField.CellToAttack.UnitStack.Units.Count <
-                GameField.CellToAttack.MaxUnitNumber)
+            if (GameField.CellToAttack.UnitStack != null &&
+                GameField.CellToAttack.UnitStack != GameField.SelectedCell.UnitStack &&
+                GameField.CellToAttack.UnitStack.Units.Count < GameField.CellToAttack.MaxUnitNumber)
             {
                 if (GameField.CellToAttack.UnitStack.Units.Count > 1)
                 {
@@ -164,17 +183,13 @@ namespace TurnBasedGameDemo
                 else
                 {
                     GameField.CellToAttack.CurrentUnitNumber = 0;
+                    Player2.UnitStacks.Remove(GameField.CellToAttack.UnitStack);
+                    Player1.UnitStacks.Remove(GameField.CellToAttack.UnitStack);
 
                     if (IsPlayer1Selected)
-                    {
-                        Player2.UnitStacks.Remove(GameField.CellToAttack.UnitStack);
                         GameEnded = Player2.UnitStacks.Count > 0 ? false : true;
-                    }
                     else
-                    {
-                        Player1.UnitStacks.Remove(GameField.CellToAttack.UnitStack);
                         GameEnded = Player1.UnitStacks.Count > 0 ? false : true;
-                    }
 
                     GameField.CellToAttack.ClearCell();
                 }

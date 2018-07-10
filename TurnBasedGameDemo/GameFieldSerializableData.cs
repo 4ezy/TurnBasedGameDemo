@@ -10,5 +10,7 @@ namespace TurnBasedGameDemo
     public class GameFieldSerializableData
     {
         public List<GameFieldCellSerializableData> GameFieldCellsSerializableData { get; set; }
+        public int HorizCellsCount { get; set; }
+        public int VertCellsCount { get; set; }
     }
 }

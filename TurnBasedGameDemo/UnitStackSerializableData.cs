@@ -12,5 +12,7 @@ namespace TurnBasedGameDemo
         public int UnitsCapacity { get; set; }
         public Stack<Unit> Units { get; set; }
         public GameFieldCellSerializableData Cell { get; set; }
+        public UnitType UnitType { get; set; }
+        public int CellIndex { get; set; }
     }
 }

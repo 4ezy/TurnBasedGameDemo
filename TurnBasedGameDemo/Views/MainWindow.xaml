@@ -28,6 +28,8 @@
             <MenuItem Header="Save game" Command="{Binding SaveGameCommand}"/>
             <MenuItem Header="Load game" Command="{Binding LoadGameCommand}"
                       IsEnabled="{Binding IsGameStarted, Converter={StaticResource BoolViceVercaConverter}}"/>
+            <MenuItem Header="Stop game" Command="{Binding StopGameCommand}"
+                      IsEnabled="{Binding IsGameStarted}"/>
         </Menu>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ContentPresenter Content="{Binding Game.GameField}"/>

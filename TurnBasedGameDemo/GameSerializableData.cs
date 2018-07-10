@@ -9,8 +9,6 @@ namespace TurnBasedGameDemo
     [Serializable]
     public class GameSerializableData
     {
-        public bool ActionCompleted { get; set; }
-        public bool GameEnded { get; set; }
         public bool IsPlayer1Selected { get; set; }
 
         public PlayerSerializableData Player1 { get; set; }

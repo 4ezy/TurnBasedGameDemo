@@ -16,6 +16,8 @@ namespace TurnBasedGameDemo
 {
     public class GameField : Canvas
     {
+        public int HorizCellsCount { get; }
+        public int VertCellsCount { get; }
         public Player SelectedPlayer { get; set; }
         public List<GameFieldCell> GameFieldCells { get; set; }
 
@@ -28,6 +30,8 @@ namespace TurnBasedGameDemo
 
         public GameField(int horzCellsCount, int vertCellsCount, Player selectedPlayer)
         {
+            HorizCellsCount = horzCellsCount;
+            VertCellsCount = vertCellsCount;
             Width = _rectSize * horzCellsCount;
             Height = _rectSize * vertCellsCount;
             SelectedPlayer = selectedPlayer;
@@ -150,22 +154,30 @@ namespace TurnBasedGameDemo
             {
                 if (SelectedPlayer.UnitStacks.Contains(SelectedCell.UnitStack))
                 {
+                    var addUnitWindow = new AddUnitWindow();
+
+                    if (addUnitWindow.ShowDialog() == false)
+                        return;
+
+                    AddUnitFromWidnowContext(addUnitWindow);
+
                     var remUnit = SelectedCell.UnitStack;
-                    ShowAddUnitWindow();
                     SelectedPlayer.UnitStacks.Remove(remUnit);
                 }
             }
             else
-                ShowAddUnitWindow();
+            {
+                var addUnitWindow = new AddUnitWindow();
+
+                if (addUnitWindow.ShowDialog() == false)
+                    return;
+
+                AddUnitFromWidnowContext(addUnitWindow);
+            }
         }
 
-        private void ShowAddUnitWindow()
+        private void AddUnitFromWidnowContext(AddUnitWindow addUnitWindow)
         {
-            var addUnitWindow = new AddUnitWindow();
-
-            if (addUnitWindow.ShowDialog() == false)
-                return;
-
             var addUnitWindowViewModel =
                 addUnitWindow.DataContext as AddUnitWindowViewModel;
 
@@ -188,6 +200,7 @@ namespace TurnBasedGameDemo
             }
 
             SelectedPlayer.UnitStacks.Add(new UnitStack(unitType, numberOfUnits, SelectedCell));
+            SelectedPlayer.UnitStacks[SelectedPlayer.UnitStacks.Count - 1].CellIndex = GameFieldCells.IndexOf(SelectedCell);
             SelectedCell.UnitStack = SelectedPlayer.UnitStacks.Last();
         }
     }

@@ -50,6 +50,7 @@ namespace TurnBasedGameDemo.ViewModels
         public RelayCommand StartGameCommand { get; set; }
         public RelayCommand SaveGameCommand { get; set; }
         public RelayCommand LoadGameCommand { get; set; }
+        public RelayCommand StopGameCommand { get; set; }
 
         public MainWindowViewModel()
         {
@@ -70,6 +71,8 @@ namespace TurnBasedGameDemo.ViewModels
                     Game = new Game();
                     break;
                 case StartWindowAction.LoadGame:
+                    Game = new Game();
+                    LoadGame();
                     break;
                 case StartWindowAction.ExitGame:
                     Application.Current.Shutdown();
@@ -83,7 +86,6 @@ namespace TurnBasedGameDemo.ViewModels
                 ActionText = s;
             });
 
-            GetGameFieldSettingsWindow();
             OpenGameFieldSettingsCommand = new RelayCommand();
             OpenGameFieldSettingsCommand.ExecutedCommand += (() =>
             {
@@ -98,6 +100,16 @@ namespace TurnBasedGameDemo.ViewModels
 
             LoadGameCommand = new RelayCommand();
             LoadGameCommand.ExecutedCommand += LoadGame;
+
+            StopGameCommand = new RelayCommand();
+            StopGameCommand.ExecutedCommand += StopGame;
+        }
+
+        private void StopGame()
+        {
+            Game.IsGameStopped = true;
+            Game.GameEnded = true;
+            Game.ActionCompleted = true;
         }
 
         private void StartGame()
@@ -113,7 +125,10 @@ namespace TurnBasedGameDemo.ViewModels
             Game.Player1.UnitStacks.Reverse();
             Game.Player2.UnitStacks.Sort();
             Game.Player2.UnitStacks.Reverse();
-            Game.PrepareRound();
+            Game.PrepareGame();
+            Game.GameEnded = false;
+            Game.IsGameStopped = false;
+            Game.ActionCompleted = false;
             IsGameStarted = true;
 
             Game.OnGameEnded += (() =>
@@ -165,7 +180,7 @@ namespace TurnBasedGameDemo.ViewModels
             {
                 ArcherImageUri = sourcePlayer.ArcherImageUri,
                 PeasantImageUri = sourcePlayer.PeasantImageUri,
-                SwordsmanImageUri = sourcePlayer.PeasantImageUri,
+                SwordsmanImageUri = sourcePlayer.SwordsmanImageUri,
             };
 
             player.UnitStacksSerializableData = new List<UnitStackSerializableData>();
@@ -176,7 +191,9 @@ namespace TurnBasedGameDemo.ViewModels
                     = new UnitStackSerializableData
                     {
                         UnitsCapacity = item.UnitsCapacity,
-                        Units = item.Units
+                        Units = item.Units,
+                        UnitType = item.UnitType,
+                        CellIndex = item.CellIndex
                     };
 
                 var gameFieldCellSerializableData =
@@ -185,7 +202,6 @@ namespace TurnBasedGameDemo.ViewModels
                         CurrentUnitNumber = item.Cell.CurrentUnitNumber,
                         IsSelected = item.Cell.IsSelected,
                         MaxUnitNumber = item.Cell.MaxUnitNumber,
-                        UnitStack = unitStackSerializableData
                     };
 
                 unitStackSerializableData.Cell = gameFieldCellSerializableData;
@@ -200,27 +216,21 @@ namespace TurnBasedGameDemo.ViewModels
         {
             var gameFieldSerializableData = new GameFieldSerializableData
             {
-                GameFieldCellsSerializableData = new List<GameFieldCellSerializableData>()
+                GameFieldCellsSerializableData = new List<GameFieldCellSerializableData>(),
+                HorizCellsCount = Game.GameField.HorizCellsCount,
+                VertCellsCount = Game.GameField.VertCellsCount
             };
 
             foreach (var item in sourceField.GameFieldCells)
             {
-                var unitStackSerializableData = new UnitStackSerializableData
-                {
-                    Units = item.UnitStack?.Units,
-                    UnitsCapacity = item.UnitStack != null ? item.UnitStack.UnitsCapacity : 0
-                };
-
                 var gameFieldCellSerializableData =
-                    new GameFieldCellSerializableData
-                    {
-                        CurrentUnitNumber = item.CurrentUnitNumber,
-                        IsSelected = item.IsSelected,
-                        MaxUnitNumber = item.MaxUnitNumber,
-                        UnitStack = unitStackSerializableData
-                    };
+                        new GameFieldCellSerializableData
+                        {
+                            CurrentUnitNumber = item.CurrentUnitNumber,
+                            IsSelected = item.IsSelected,
+                            MaxUnitNumber = item.MaxUnitNumber,
+                        };
 
-                unitStackSerializableData.Cell = gameFieldCellSerializableData;
                 gameFieldSerializableData.GameFieldCellsSerializableData.Add(gameFieldCellSerializableData);
             }
 
@@ -231,8 +241,6 @@ namespace TurnBasedGameDemo.ViewModels
         {
             var data = new GameSerializableData()
             {
-                ActionCompleted = Game.ActionCompleted,
-                GameEnded = Game.GameEnded,
                 IsPlayer1Selected = Game.IsPlayer1Selected
             };
 
@@ -243,6 +251,91 @@ namespace TurnBasedGameDemo.ViewModels
             var binaryFormatter = new BinaryFormatter();
             using (var fs = new FileStream(gameSavedDataPath, FileMode.Create))
                 binaryFormatter.Serialize(fs, data);
+        }
+
+        public void LoadPlayers(GameSerializableData data)
+        {
+            foreach (var item in data.Player1.UnitStacksSerializableData)
+            {
+                UnitStack unitStack = new UnitStack(item.UnitType, item.UnitsCapacity)
+                {
+                    Units = new Stack<Unit>(),
+                    CellIndex = item.CellIndex
+                };
+
+                foreach (var unit in item.Units)
+                {
+                    Unit u = SimpleUnitFactory.CreateUnit(item.UnitType);
+                    u.CurrentHitPoints = unit.CurrentHitPoints;
+                    unitStack.Units.Push(u);
+                }
+
+                unitStack.Cell = Game.GameField.GameFieldCells[unitStack.CellIndex];
+                Game.Player1.UnitStacks.Add(unitStack);
+                Game.GameField.GameFieldCells[unitStack.CellIndex].UnitStack = Game.Player1.UnitStacks.Last();
+
+                Game.GameField.GameFieldCells[unitStack.CellIndex].MaxUnitNumber =
+                    data.GameFieldSerializableData.GameFieldCellsSerializableData[unitStack.CellIndex].MaxUnitNumber;
+                Game.GameField.GameFieldCells[unitStack.CellIndex].CurrentUnitNumber =
+                    data.GameFieldSerializableData.GameFieldCellsSerializableData[unitStack.CellIndex].CurrentUnitNumber;
+
+                switch (Game.GameField.GameFieldCells[unitStack.CellIndex].UnitStack.UnitType)
+                {
+                    case UnitType.Swordsman:
+                        Game.GameField.GameFieldCells[unitStack.CellIndex].UnitImage = Game.Player1.SwordsmanImage;
+                        break;
+                    case UnitType.Archer:
+                        Game.GameField.GameFieldCells[unitStack.CellIndex].UnitImage = Game.Player1.ArcherImage;
+                        break;
+                    case UnitType.Peasant:
+                        Game.GameField.GameFieldCells[unitStack.CellIndex].UnitImage = Game.Player1.PeasantImage;
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+            foreach (var item in data.Player2.UnitStacksSerializableData)
+            {
+                UnitStack unitStack = new UnitStack(item.UnitType, item.UnitsCapacity)
+                {
+                    Units = new Stack<Unit>(),
+                    CellIndex = item.CellIndex
+                };
+
+                foreach (var unit in item.Units)
+                {
+                    Unit u = SimpleUnitFactory.CreateUnit(item.UnitType);
+                    u.CurrentHitPoints = unit.CurrentHitPoints;
+                    unitStack.Units.Push(u);
+                }
+
+                unitStack.Cell = Game.GameField.GameFieldCells[unitStack.CellIndex];
+                Game.Player2.UnitStacks.Add(unitStack);
+                Game.GameField.GameFieldCells[unitStack.CellIndex].UnitStack = Game.Player2.UnitStacks.Last();
+
+                Game.GameField.GameFieldCells[unitStack.CellIndex].MaxUnitNumber =
+                    data.GameFieldSerializableData.GameFieldCellsSerializableData[unitStack.CellIndex].MaxUnitNumber;
+                Game.GameField.GameFieldCells[unitStack.CellIndex].CurrentUnitNumber =
+                    data.GameFieldSerializableData.GameFieldCellsSerializableData[unitStack.CellIndex].CurrentUnitNumber;
+
+                switch (Game.GameField.GameFieldCells[unitStack.CellIndex].UnitStack.UnitType)
+                {
+                    case UnitType.Swordsman:
+                        Game.GameField.GameFieldCells[unitStack.CellIndex].UnitImage = Game.Player2.SwordsmanImage;
+                        break;
+                    case UnitType.Archer:
+                        Game.GameField.GameFieldCells[unitStack.CellIndex].UnitImage = Game.Player2.ArcherImage;
+                        break;
+                    case UnitType.Peasant:
+                        Game.GameField.GameFieldCells[unitStack.CellIndex].UnitImage = Game.Player2.PeasantImage;
+                        break;
+                    default:
+                        break;
+                }
+
+            }
         }
 
         public void LoadGame()
@@ -266,18 +359,16 @@ namespace TurnBasedGameDemo.ViewModels
                 return;
             }
 
-            Game.GameField = new GameField();
-            Game.ActionCompleted = data.ActionCompleted;
-            Game.GameEnded = data.GameEnded;
-            Game.IsPlayer1Selected = data.IsPlayer1Selected;
+            Game.GameField = new GameField(data.GameFieldSerializableData.HorizCellsCount,
+                data.GameFieldSerializableData.VertCellsCount, null);
             Game.Player1 = new Player(data.Player1.SwordsmanImageUri,
                 data.Player1.ArcherImageUri,
                 data.Player1.PeasantImageUri);
             Game.Player2 = new Player(data.Player2.SwordsmanImageUri,
                 data.Player2.ArcherImageUri,
                 data.Player2.PeasantImageUri);
-            
-            
+            Game.IsPlayer1Selected = data.IsPlayer1Selected;
+            LoadPlayers(data);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

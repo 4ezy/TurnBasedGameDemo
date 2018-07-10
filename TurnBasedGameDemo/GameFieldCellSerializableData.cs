@@ -13,6 +13,5 @@ namespace TurnBasedGameDemo
         public bool IsSelected { get; set; }
         public int CurrentUnitNumber { get; set; }
         public int MaxUnitNumber { get; set; }
-        public UnitStackSerializableData UnitStack { get; set; }
     }
 }

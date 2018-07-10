@@ -12,9 +12,18 @@ namespace TurnBasedGameDemo
         public int UnitsCapacity { get; }
         public Stack<Unit> Units { get; set; }
         public GameFieldCell Cell { get; set; }
+        public int CellIndex { get; set; }
+        public UnitType UnitType { get; }
+
+        public UnitStack(UnitType unitType, int unitsCapacity)
+        {
+            UnitsCapacity = unitsCapacity;
+            UnitType = unitType;
+        }
 
         public UnitStack(UnitType unitType, int numberOfUnits, GameFieldCell cell)
         {
+            UnitType = unitType;
             Units = new Stack<Unit>(numberOfUnits);
 
             for (int i = 0; i < numberOfUnits; i++)
